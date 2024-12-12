@@ -5,231 +5,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot - Khan Orgil</title>
     <style>
-        /* styles.css */
+        /* Body and container styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #f1f1f1, #e0f7fa); /* Soft gradient background with light blue */
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-end;
             height: 100vh;
             margin: 0;
-        }
-
-        .chat-container {
-            width: 400px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
             overflow: hidden;
         }
 
-        .chat-header {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-            text-align: center;
+        /* Add some decorative shapes or patterns */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/geometry.png');
+            opacity: 0.05; /* Very subtle pattern overlay */
+            z-index: -1;
         }
 
-        .chat-header img {
+        /* Chatbot container button (to open chat) */
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            background-color: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #chatbot-container img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+        }
+
+        /* Chatbot iframe container styling */
+        .chatbot-embed-container {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 50;
+            width: 400px; /* Increased width for larger chat */
+            height: 550px; /* Increased height for better user interaction */
+            border: none;
+            border-radius: 15px; /* More rounded corners for aesthetics */
+            background-color: #ffffff; /* White background for the chat */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            display: none; /* Hidden by default, toggle visibility on click */
+        }
+
+        /* Covering the "Powered by Dante" and chat icon with a custom top */
+        .dante-cover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px; /* Increased height for better visual appeal */
+            background-color: #4CAF50;  /* Matching the chatbot color */
+            z-index: 10;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-left: 15px;
+            padding-right: 15px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        /* Profile picture customization (placed on the left side) */
+        .profile-picture {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            margin-right: 10px;
+            margin-right: 15px;
         }
 
-        .chat-box {
-            max-height: 400px;
-            overflow-y: auto;
-            padding: 15px;
-            height: 300px;
-            background-color: #fafafa;
+        /* Hiding the "Powered by Dante" text */
+        .dante-powered {
+            display: none;
         }
 
-        .chat-message {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            max-width: 80%;
+        /* Chat interface space (adjusted to make the content larger) */
+        .chatbot-embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
         }
 
-        .bot-message {
-            background-color: #d1f7d1;
-            margin-left: 10px;
-            display: flex;
-            align-items: center;
+        /* Background color outside the chat frame */
+        .background-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #e1f5fe; /* Light blue background */
+            background-image: linear-gradient(45deg, #ffcccb, #e1f5fe); /* Soft gradient */
+            z-index: -2; /* Positioned behind everything */
+            opacity: 0.8;
         }
 
-        .user-message {
-            background-color: #d1e7f7;
-            margin-right: 10px;
-            text-align: right;
-        }
-
-        .bot-message img {
-            margin-right: 10px;
-            width: 30px;
-            height: 30px;
-        }
-
-        .chat-input {
-            width: calc(100% - 60px);
-            padding: 10px;
-            border: none;
-            border-top: 1px solid #ddd;
-            border-radius: 5px;
-            outline: none;
-        }
-
-        .send-btn {
-            width: 50px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .send-btn:hover {
-            background-color: #45a049;
-        }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <img src="https://assets.onecompiler.app/42ypgxm44/432u7ayng/461849763_1624316588496298_2606442471501443935_n.jpg" alt="Khan Orgil">
-            Khan Orgil
+
+    <!-- Background Color and Decoration -->
+    <div class="background-decoration"></div>
+
+    <!-- Chatbot container button -->
+    <div id="chatbot-container">
+        <img src="https://assets.onecompiler.app/42ypgxm44/432u7ayng/461849763_1624316588496298_2606442471501443935_n.jpg" alt="Khan Orgil">
+    </div>
+
+    <!-- Embed chatbot iframe -->
+    <div class="chatbot-embed-container" id="chatbot-iframe-container">
+        <div class="dante-cover">
+            <img src="https://assets.onecompiler.app/42ypgxm44/432u7ayng/461849763_1624316588496298_2606442471501443935_n.jpg" alt="Khan Orgil Profile" class="profile-picture">
+            <span style="color: white; font-weight: bold;">Khan Orgil</span>
         </div>
-        <div class="chat-box" id="chat-box">
-            <div class="chat-message bot-message">
-                <img src="https://assets.onecompiler.app/42ypgxm44/432u7ayng/461849763_1624316588496298_2606442471501443935_n.jpg" alt="Khan Orgil">
-                <p>Сайн уу! Би бол Хан Оргил. Та ямар тусламж хүсч байна вэ?</p>
-            </div>
-        </div>
-        <input type="text" id="user-input" class="chat-input" placeholder="Мессеж бичээрэй..." onkeydown="if(event.key === 'Enter'){sendMessage()}">
-        <button onclick="sendMessage()" class="send-btn">Илгээх</button>
+        <iframe src="https://dante-ai.com/embed/?kb_id=10a6b8c8-6251-41a3-90fc-c16ed5402e59&token=cfec59a7-59a4-4f56-aa38-6361fe3de4e6&modeltype=gpt-4-omnimodel-mini&mode=false&logo=ZmFsc2U%3D&bubble=true&bubbleopen=false" frameborder="0"></iframe>
     </div>
 
     <script>
-        // script.js
-
-        // This will store the user's previous messages and the bot's replies
-        let conversationHistory = [];
-
-        function sendMessage() {
-            const inputField = document.getElementById("user-input");
-            const userMessage = inputField.value;
-
-            if (userMessage.trim() === "") return;
-
-            // Display the user's message
-            displayMessage(userMessage, "user");
-
-            // Store the user's message in the conversation history
-            conversationHistory.push({ role: "user", message: userMessage });
-
-            // Clear the input field
-            inputField.value = "";
-
-            // Simulate bot response after a delay
-            setTimeout(() => {
-                const botResponse = getBotResponse(userMessage);
-                displayMessage(botResponse, "bot");
-
-                // Store the bot's response in the conversation history
-                conversationHistory.push({ role: "bot", message: botResponse });
-            }, 1000);
+        // Function to automatically open the chatbot when the page loads
+        function openChat() {
+            const chatbotIframe = document.getElementById('chatbot-iframe-container');
+            chatbotIframe.style.display = 'block';
         }
 
-        function displayMessage(message, sender) {
-            const chatBox = document.getElementById("chat-box");
-            const messageElement = document.createElement("div");
-            messageElement.classList.add("chat-message", sender + "-message");
+        // Optional: You can also add some script to toggle the chat window by clicking the profile pic
+        document.getElementById('chatbot-container').addEventListener('click', function() {
+            const iframeContainer = document.getElementById('chatbot-iframe-container');
+            iframeContainer.style.display = (iframeContainer.style.display === 'block') ? 'none' : 'block';
+        });
 
-            if (sender === "bot") {
-                messageElement.innerHTML = `
-                    <div class="bot-message">
-                        <img src="https://assets.onecompiler.app/42ypgxm44/432u7ayng/461849763_1624316588496298_2606442471501443935_n.jpg" alt="Khan Orgil">
-                        <p>${message}</p>
-                    </div>
-                `;
-            } else {
-                messageElement.innerHTML = `<p>${message}</p>`;
-            }
-
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-        }
-
-        function getBotResponse(userMessage) {
-            const lowerCaseMessage = userMessage.toLowerCase();
-
-            // Response based on recent conversation history
-            if (conversationHistory.length > 1) {
-                const lastMessage = conversationHistory[conversationHistory.length - 2];
-                if (lastMessage.role === "bot" && lowerCaseMessage.includes("thanks")) {
-                    return "Танд туслахад таатай байна!";
-                }
-            }
-
-            // Response to philosophical or deep inquiries
-            if (lowerCaseMessage.includes("meaning of life") || lowerCaseMessage.includes("purpose")) {
-                return "Амьдралын зорилго нь таны хувийн утга учрыг хайх явдал юм. Та өөрөө шийдэж чадна.";
-            }
-
-            // Empathetic responses to sad or frustrated comments
-            if (lowerCaseMessage.includes("sad") || lowerCaseMessage.includes("feeling down")) {
-                return "Би таны мэдрэмжийг ойлгож байна. Заримдаа амьдрал хүнд санагдах үе байдаг.";
-            }
-
-            // Playful response to confidence or trash talk
-            if (lowerCaseMessage.includes("i'm the best") || lowerCaseMessage.includes("easy")) {
-                return "Өө, ийм хялбар гэж үү? Тэгвэл бүх хүн супер баатар болдог байх даа!";
-            }
-
-            // Responding to generic statements with some playful or thoughtful remarks
-            if (lowerCaseMessage.includes("hello") || lowerCaseMessage.includes("hi") || lowerCaseMessage.includes("hey")) {
-                return "Сайн уу! Би бол Хан Оргил. Танд ямар тусламж хэрэгтэй байна?";
-            }
-
-            // Respond to inquiries about personal information
-            if (lowerCaseMessage.includes("who are you")) {
-                return "Би Хан Оргил, таны виртуал туслах. Би танд ямар тусламж үзүүлж болох вэ?";
-            }
-
-            // Respond to compliments
-            if (lowerCaseMessage.includes("you are smart") || lowerCaseMessage.includes("you are great")) {
-                return "Баярлалаа! Таны сайшаал надад таалагдаж байна!";
-            }
-
-            // Jokes or lighthearted banter
-            if (lowerCaseMessage.includes("tell me a joke") || lowerCaseMessage.includes("make me laugh")) {
-                return "Яагаад программистууд сармагчинтай хүндэтгэлтэй харьцдаг вэ? Учир нь тэд ‘код’ хардаг! 😄";
-            }
-
-            // Asking for advice or opinion
-            if (lowerCaseMessage.includes("what should i do")) {
-                return "Хэрвээ та ямар нэгэн шийдвэр гаргах гэж байгаа бол, хамгийн чухал зүйл бол таны хувийн утга учрыг олох явдал юм.";
-            }
-
-            // Asking the chatbot's opinion
-            if (lowerCaseMessage.includes("what do you think")) {
-                return "Би бол програмчлалын үндсэн дээр ажилладаг хиймэл оюун, гэхдээ би таны бодол санааг сонсох дуртай!";
-            }
-
-            // Philosophical response to "who am i"
-            if (lowerCaseMessage.includes("who am i")) {
-                return "Та өөрийнхөө оршихуйг хайж олоход хүчтэй байх хэрэгтэй. Бид бүгд өөрсдийнхөө утга учрыг хайдаг.";
-            }
-
-            // Default generic response
-            return "Таны асуулт бүрт хариулт байдаг. Та надаас юу хүсч байна?";
-        }
+        // Open chat automatically on page load
+        window.onload = openChat;
     </script>
+
 </body>
 </html>
