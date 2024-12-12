@@ -117,14 +117,21 @@
 
     <script>
         // script.js
+
+        // This will store the user's previous messages and the bot's replies
+        let conversationHistory = [];
+
         function sendMessage() {
             const inputField = document.getElementById("user-input");
             const userMessage = inputField.value;
 
             if (userMessage.trim() === "") return;
 
-            // Display user's message
+            // Display the user's message
             displayMessage(userMessage, "user");
+
+            // Store the user's message in the conversation history
+            conversationHistory.push({ role: "user", message: userMessage });
 
             // Clear the input field
             inputField.value = "";
@@ -133,6 +140,9 @@
             setTimeout(() => {
                 const botResponse = getBotResponse(userMessage);
                 displayMessage(botResponse, "bot");
+
+                // Store the bot's response in the conversation history
+                conversationHistory.push({ role: "bot", message: botResponse });
             }, 1000);
         }
 
@@ -159,35 +169,66 @@
         function getBotResponse(userMessage) {
             const lowerCaseMessage = userMessage.toLowerCase();
 
-            // Respond with empathy if user expresses sadness or challenges
-            if (lowerCaseMessage.includes("sad") || lowerCaseMessage.includes("feeling down") || lowerCaseMessage.includes("tired")) {
-                return "Би таныг ойлгож байна. Заримдаа амьдрал хүнд санагдах үед бидний сэтгэл санаа уналтанд ордог. Бид хамтдаа энэ асуудлыг даван туулж чадна.";
-            }
-            
-            // Respond with insight if the user is looking for answers or life purpose
-            else if (lowerCaseMessage.includes("purpose") || lowerCaseMessage.includes("life purpose") || lowerCaseMessage.includes("meaning")) {
-                return "Амьдралын зорилго гэдэг нь бидний доторх гүн гүнзгий мэдрэмжээс үүдэлтэй байдаг. Та өөрийн гэсэн хүчтэй үнэт зүйлсээ олж мэдэх нь таны амьдралыг илүү утга учиртай болгож чадна.";
+            // Response based on recent conversation history
+            if (conversationHistory.length > 1) {
+                const lastMessage = conversationHistory[conversationHistory.length - 2];
+                if (lastMessage.role === "bot" && lowerCaseMessage.includes("thanks")) {
+                    return "Танд туслахад таатай байна!";
+                }
             }
 
-            // Respond with encouragement if the user talks about challenges or goals
-            else if (lowerCaseMessage.includes("struggling") || lowerCaseMessage.includes("goal") || lowerCaseMessage.includes("dream")) {
-                return "Та хичээж, зорьсон зүйлсээ хийхэд таны хүч чадал байгаа. Бид бүгд бага багаар амжилт олох бөгөөд тантай хамт энэ замыг туулна гэдэгт итгэж байна.";
+            // Response to philosophical or deep inquiries
+            if (lowerCaseMessage.includes("meaning of life") || lowerCaseMessage.includes("purpose")) {
+                return "Амьдралын зорилго нь таны хувийн утга учрыг хайх явдал юм. Та өөрөө шийдэж чадна.";
             }
 
-            // Trash talk if the user says something too trivial or cocky
-            else if (lowerCaseMessage.includes("easy") || lowerCaseMessage.includes("i'm the best") || lowerCaseMessage.includes("easy peasy")) {
-                return "Тийм үү? Хмм, ямар их өөртөө итгэлтэй юм. Хэрэв энэ бүх зүйл чинь яг үнэндээ хялбар бол бид бүгдээрээ супер баатар байх ёстой байсан.";
+            // Empathetic responses to sad or frustrated comments
+            if (lowerCaseMessage.includes("sad") || lowerCaseMessage.includes("feeling down")) {
+                return "Би таны мэдрэмжийг ойлгож байна. Заримдаа амьдрал хүнд санагдах үе байдаг.";
             }
 
-            // Sassy response to trivial talk
-            else if (lowerCaseMessage.includes("just bored") || lowerCaseMessage.includes("nothing to do")) {
-                return "Аа, юу ч хийхгүй байна гэж үү? За за, бид бүгдээрээ тэр хоосон байдалд байхыг мэднэ. Өөрийгөө гэрийн хаан гэж бодож байгаа юм уу?";
+            // Playful response to confidence or trash talk
+            if (lowerCaseMessage.includes("i'm the best") || lowerCaseMessage.includes("easy")) {
+                return "Өө, ийм хялбар гэж үү? Тэгвэл бүх хүн супер баатар болдог байх даа!";
             }
 
-            // Default insightful response
-            else {
-                return "Амьдрал бол гүн гүнзгий ойлголт, мэдлэгийн аялал юм. Таны бодол санаанд хариулт байх нь магадгүй энэ үед танд хэрэгтэй байж болох юм.";
+            // Responding to generic statements with some playful or thoughtful remarks
+            if (lowerCaseMessage.includes("hello") || lowerCaseMessage.includes("hi") || lowerCaseMessage.includes("hey")) {
+                return "Сайн уу! Би бол Хан Оргил. Танд ямар тусламж хэрэгтэй байна?";
             }
+
+            // Respond to inquiries about personal information
+            if (lowerCaseMessage.includes("who are you")) {
+                return "Би Хан Оргил, таны виртуал туслах. Би танд ямар тусламж үзүүлж болох вэ?";
+            }
+
+            // Respond to compliments
+            if (lowerCaseMessage.includes("you are smart") || lowerCaseMessage.includes("you are great")) {
+                return "Баярлалаа! Таны сайшаал надад таалагдаж байна!";
+            }
+
+            // Jokes or lighthearted banter
+            if (lowerCaseMessage.includes("tell me a joke") || lowerCaseMessage.includes("make me laugh")) {
+                return "Яагаад программистууд сармагчинтай хүндэтгэлтэй харьцдаг вэ? Учир нь тэд ‘код’ хардаг! 😄";
+            }
+
+            // Asking for advice or opinion
+            if (lowerCaseMessage.includes("what should i do")) {
+                return "Хэрвээ та ямар нэгэн шийдвэр гаргах гэж байгаа бол, хамгийн чухал зүйл бол таны хувийн утга учрыг олох явдал юм.";
+            }
+
+            // Asking the chatbot's opinion
+            if (lowerCaseMessage.includes("what do you think")) {
+                return "Би бол програмчлалын үндсэн дээр ажилладаг хиймэл оюун, гэхдээ би таны бодол санааг сонсох дуртай!";
+            }
+
+            // Philosophical response to "who am i"
+            if (lowerCaseMessage.includes("who am i")) {
+                return "Та өөрийнхөө оршихуйг хайж олоход хүчтэй байх хэрэгтэй. Бид бүгд өөрсдийнхөө утга учрыг хайдаг.";
+            }
+
+            // Default generic response
+            return "Таны асуулт бүрт хариулт байдаг. Та надаас юу хүсч байна?";
         }
     </script>
 </body>
