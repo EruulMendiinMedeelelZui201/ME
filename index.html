@@ -107,19 +107,25 @@
             border-radius: 15px;
         }
 
-        /* Background color outside the chat frame */
-        .background-decoration {
-            position: absolute;
-            top: 0;
+        /* Footer styling for credits */
+        footer {
+            position: fixed;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            background-color: #e1f5fe; /* Light blue background */
-            background-image: linear-gradient(45deg, #ffcccb, #e1f5fe); /* Soft gradient */
-            z-index: -2; /* Positioned behind everything */
-            opacity: 0.8;
+            background-color: #e0f7fa;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #555;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
         }
 
+        /* Link styling in footer */
+        footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -140,6 +146,10 @@
         </div>
         <iframe src="https://dante-ai.com/embed/?kb_id=10a6b8c8-6251-41a3-90fc-c16ed5402e59&token=cfec59a7-59a4-4f56-aa38-6361fe3de4e6&modeltype=gpt-4-omnimodel-mini&mode=false&logo=ZmFsc2U%3D&bubble=true&bubbleopen=false" frameborder="0"></iframe>
     </div>
+
+    <footer>
+        Chat powered by <a href="https://dante-ai.com" target="_blank">Dante AI</a>. 
+    </footer>
 
     <script>
         // Function to automatically open the chatbot when the page loads
